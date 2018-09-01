@@ -8,6 +8,7 @@ int randomnumber;
 int upbuffer;
 int downbuffer;
 int abuffer;
+int lastguess;
 
 void setup() {
   // put your setup code here, to run once:
@@ -19,6 +20,7 @@ void setup() {
   upbuffer=0;
   downbuffer=0;
   abuffer=0;
+  lastguess=0;
   srand(7/8);
   randomnumber=1+rand()%100;
 
@@ -44,18 +46,19 @@ void loop() {
     }else{
       if(arduboy.pressed(UP_BUTTON)==true and upbuffer==0){
         upbuffer=1;
-        guessnumber++;
+        guessednumber++;
       }
       if(arduboy.pressed(DOWN_BUTTON)==true and downbuffer==0){
         downbuffer=1;
-        guessnumber--;
+        guessednumber--;
       }
-      if(arduboy.pressed(A_BUTTON)==true abuffer==0){
+      if(arduboy.pressed(A_BUTTON)==true and abuffer==0){
         abuffer=1;
         if(guessednumber==randomnumber){
           playerwin=1;
         }else{
           attempts++;
+          lastguess=guessednumber;
        }
       }
       arduboy.setCursor(0,0);
@@ -64,11 +67,24 @@ void loop() {
       arduboy.print("\n");
       arduboy.print("Number to guess:");
       arduboy.print(guessednumber);
+      arduboy.print("\n");
+      if(attempts==0){
+        arduboy.print("Good luck!");
+      }else{
+        arduboy.print(lastguess);
+        if(lastguess>randomnumber){
+          arduboy.print(" is too high!");
+        }
+        if(lastguess<randomnumber){
+          arduboy.print(" is too low!");
+        }
+      }
     }
     
   }else{
     arduboy.setCursor(0,0);
-    arduboy.print("You won!);
+    arduboy.print("You won!");
+    arduboy.print("\n");
     arduboy.print("Correct Number:");
     arduboy.print(randomnumber);
     if(arduboy.pressed(A_BUTTON)==true and abuffer==0){
